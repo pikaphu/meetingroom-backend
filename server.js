@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 
 // session 
 app.use(session({
-    secret: process.env.SESSION_SECRET, // "secret"
+    secret: process.env.SESSION_SECRET || "secret", // for test only | need more complex security
     resave: false,
     saveUninitialized: false,
     cookie: {}

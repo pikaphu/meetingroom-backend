@@ -17,7 +17,7 @@ services:
       - 7171:7171
     
     command: >
-        sh -c "npm install -g nodemon && npm install && npm run start"
+        sh -c "npm ci && npm run dev"
     #command: sh -c "npm install -g pm2 && npm install && pm2-runtime server.js --watch"
     #command: npm run start              
     #command: npm run dev
