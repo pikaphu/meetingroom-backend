@@ -1,0 +1,6 @@
+version: "3"
+services:
+  my_application:
+    image: node:12-alpine
+    environment:
+      NODE_ENV: production

@@ -1,0 +1,20 @@
+{
+    "development": {
+        "config_id": "development",
+        "app_name": "my-nodejs-app",
+        "app_desc": "my app desc",
+        "server_port": 7171
+    },
+    "testing": {
+        "config_id": "testing",
+        "server_port": 3000
+    },
+    "staging": {
+        "config_id": "staging",
+        "server_port": 8080
+    },
+    "production": {
+        "config_id": "production",
+        "server_port": 8080
+    }
+}
