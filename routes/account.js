@@ -56,10 +56,7 @@ router.post('/getuserlogin', (req, res) => {
         if (req.session.userLoginData) {
             return res.json(req.session.userLoginData)
         }
-        throw res.json({
-            message: "Unauthorized"
-        })
-
+        throw new Error('Unauthorize.');
     } catch (ex) {
         res.errorEx(ex, 401) // unauthorized
     }
