@@ -1,4 +1,5 @@
 const router = require('express').Router()
+
 const {
     check,
     validationResult
@@ -39,6 +40,8 @@ router.post('/login', loginValidator, async (req, res) => {
     try {
         req.validate();
         const userLoginData = await onLogin(req.body)
+        console.table(userLoginData)
+
         req.session.userLoginData = userLoginData
         res.json(userLoginData)
     } catch (ex) {

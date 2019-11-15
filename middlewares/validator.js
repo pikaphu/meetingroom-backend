@@ -17,8 +17,9 @@ module.exports = function (req, res, next) {
     }
 
     res.errorEx = function (ex, status = 400) {
+        console.log("ErrorEX!");
         if (Array.isArray(ex)) {
-            // Array 
+            // Array             
             console.table(ex);
             res.status(status).json({
                 message: ex // ex.array()
@@ -26,7 +27,7 @@ module.exports = function (req, res, next) {
         } else {
             // string only
             res.status(status).json({
-                message: ex.message
+                message: ex.message || ex
             })
         }
 

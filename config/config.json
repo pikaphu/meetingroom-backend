@@ -1,13 +1,15 @@
 {
+    "localtest": {
+        "config_id": "localtest",
+        "app_name": "my-nodejs-app",
+        "app_desc": "[LOCALHOST] for testing on my machine",
+        "server_port": 3000
+    },
     "development": {
         "config_id": "development",
         "app_name": "my-nodejs-app",
-        "app_desc": "my app desc",
+        "app_desc": "[DEFAULT] develop env",
         "server_port": 7171
-    },
-    "testing": {
-        "config_id": "testing",
-        "server_port": 3000
     },
     "staging": {
         "config_id": "staging",

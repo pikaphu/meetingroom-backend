@@ -1,8 +1,11 @@
 const router = require('express').Router()
+const {
+    authen
+} = require('../security/password.js')
 
-// main
+// main route
 router.get('/', (req, res) => {
-    console.log('api');
+    console.log('route api');
     res.json({
         message: 'router msg'
     })
@@ -10,5 +13,9 @@ router.get('/', (req, res) => {
 
 // route: account
 router.use('/account', require('./account.js'))
+
+// route: equipment
+router.use('/equipment', authen, require('./equipment.js'))
+
 
 module.exports = router
