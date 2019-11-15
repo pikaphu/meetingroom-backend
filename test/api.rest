@@ -1,0 +1,16 @@
+GET http://localhost:3000/api  
+
+###
+
+POST http://localhost:3000/api/account/login 
+content-type: application/json
+
+{
+  "u_username": "phu",
+  "u_password": "phu"
+}
+
+###
+
+POST http://localhost:3000/api/account/getuserlogin HTTP/1.1
+content-type: application/json
