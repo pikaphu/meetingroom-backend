@@ -51,7 +51,7 @@ router.post('/login', loginValidator, async (req, res) => {
 })
 
 // route: Get user login session
-router.post('/getuserlogin', (req, res) => {
+router.get('/getuserlogin', (req, res) => {
     try {
         console.log('UserLogin:');
         console.table(req.session.userLoginData);

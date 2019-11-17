@@ -17,7 +17,8 @@ app.use(cors())
 
 // express http options (request, response)
 app.use(bodyParser.urlencoded({
-    extended: false
+    extended: false,
+    limit: '10MB'
 }))
 app.use(bodyParser.json())
 
