@@ -17,7 +17,7 @@ module.exports = function (req, res, next) {
     }
 
     res.errorEx = function (ex, status = 400) {
-        console.log("ErrorEX!");
+        console.log("ErrorEX!\n");
         if (Array.isArray(ex)) {
             // Array             
             console.table(ex);

@@ -9,7 +9,7 @@ const securityScope = {
     },
     authen(req, res, next) {
         try {
-            console.log("Path:", req.path) // check req path
+            console.log("Path:", req.originalUrl) // check req path
             console.log("Header: ", req.headers.authorization) // authorization header
             // bypass security for testing only
             if (securityScope.password_hash(req.headers.authorization) == "846589320cfd84a90db893135fcdae10a3afec26ca2df66213069b8e1ce9145f") {
