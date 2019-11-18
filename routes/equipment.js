@@ -2,6 +2,7 @@
 const router = require('express').Router()
 const {
     check,
+    query,
     validationResult
 } = require('express-validator')
 const service = require('../services/equipment.js')
@@ -14,10 +15,21 @@ const equipDir = path.join(uploadDir, 'equipments')
 
 // #endregion
 
-router.get('/', (req, res) => {
-    res.json({
-        message: "Equipment"
-    })
+// route: home
+const homeValidator = [
+    query('page').not().isEmpty().isInt().toInt() // 0=isEmpty(), 1=isInt()
+]
+router.get('/', homeValidator, async (req, res) => {
+    try {
+        req.validate()
+
+        const data = await service.list(req.query)
+        res.json({
+            message: data
+        })
+    } catch (ex) {
+        res.errorEx(ex)
+    }
 })
 
 // route: ADD
