@@ -12,13 +12,25 @@ function list(value) {
         const startPage = ((value.page || 1) - 1) * limitPage // paging
 
         // sql statements
-        const sqlcmds = {
+        const sqlCmds = {
             count: `SELECT COUNT(*) as 'rows' FROM ${tbName}`,
             select: `SELECT * FROM ${tbName}`
         }
 
-        // find rows first
-        db.query(sqlcmds.count, (error, result) => {
+        // Search condition
+        if (value.search_key && value.search_text) {
+            const key = value.search_key
+            const txt = value.search_text
+            const sqlSearch = ` WHERE ${db.escapeId(key)} LIKE ${db.escape(`%${txt}%`)}`
+
+            // append condition to each statements
+            for (var index in sqlCmds) {
+                sqlCmds[index] += sqlSearch
+            }
+        }
+
+        // get rows number
+        db.query(sqlCmds.count, (error, result) => {
             if (error) return reject(error)
 
             // prepare data
@@ -28,10 +40,10 @@ function list(value) {
             }
 
             // pagination to query
-            sqlcmds.select += ` LIMIT ${db.escape(startPage)}, ${limitPage}` // LIMIT value, offset
+            sqlCmds.select += ` LIMIT ${db.escape(startPage)}, ${limitPage}` // LIMIT value, offset
 
             // execute query to get result
-            db.query(sqlcmds.select, (error, result) => {
+            db.query(sqlCmds.select, (error, result) => {
                 if (error) return reject(error)
 
                 items.result = result
