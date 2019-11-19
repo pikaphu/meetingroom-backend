@@ -6,10 +6,11 @@ const tbName = 'tb_equipments'
 // get all rows
 function list(value) {
     return new Promise((resolve, reject) => {
-        // console.log(value);        
+        console.log(value);
         // pagination var
         const limitPage = value.limit || 10 // default limit per page
         const startPage = ((value.page || 1) - 1) * limitPage // paging
+        console.log(limitPage);
 
         // sql statements
         const sqlCmds = {

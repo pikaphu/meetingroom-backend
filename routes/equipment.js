@@ -24,9 +24,7 @@ router.get('/', homeValidator, async (req, res) => {
         req.validate()
 
         const data = await service.list(req.query)
-        res.json({
-            message: data
-        })
+        res.json(data)
     } catch (ex) {
         res.errorEx(ex)
     }

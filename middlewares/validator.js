@@ -22,7 +22,7 @@ module.exports = function (req, res, next) {
             // Array             
             console.table(ex);
             res.status(status).json({
-                message: ex // ex.array()
+                message: ex //.array()
             })
         } else {
             // string only

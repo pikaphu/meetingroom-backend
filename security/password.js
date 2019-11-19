@@ -8,6 +8,7 @@ const securityScope = {
         return securityScope.password_hash(password) === hashed_password
     },
     authen(req, res, next) {
+        console.log("-authen-");
         try {
             console.log("Path:", req.originalUrl) // check req path
             console.log("Header: ", req.headers.authorization) // authorization header
