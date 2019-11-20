@@ -12,6 +12,11 @@
         "port": "27017",
         "user": "admin",
         "pass": "password",
-        "db": "phu-db"
+        "db": "meeting-room-db"
+    },
+    "ftp": {
+        "host": "127.0.0.1",
+        "user": "user",
+        "password": "pass"
     }
 }

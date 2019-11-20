@@ -47,6 +47,9 @@ app.get('*', function (req, res) {
     //res.json({message: 'api test'})
 })
 
+// (optional) My Tester
+// app.use('/test', require('./test/phutest1.js'))
+
 // Final. start server
 app.listen(PORT, () =>
     console.log('Server is listening at port:', PORT))
