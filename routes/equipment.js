@@ -1,4 +1,4 @@
-// #region Import
+// #region Import + setup
 const router = require('express').Router()
 const {
     check,
@@ -15,7 +15,11 @@ const uploadDirName = 'uploads'
 const equipDirName = 'equipments'
 const uploadDir = path.resolve(uploadDirName)
 const equipDir = path.join(uploadDir, equipDirName)
+
+const ftp = require("basic-ftp")
+const ftpClient = new ftp.Client()
 const ftpUploadDir = `/${uploadDirName}/${equipDirName}`
+ftpClient.ftp.verbose = false
 
 // #endregion
 
@@ -46,8 +50,7 @@ router.post('/add', addItemValidator, async (req, res) => {
     try {
         req.validate()
 
-        // convert base64 data to img file and get its name
-        // req.body.eq_image = convertBase64ToImg(req.body.eq_image)
+        // convert base64 data to img file and get its name        
         const img = convertBase64ToImg(req.body.eq_image)
         req.body.eq_image = img
 
@@ -71,7 +74,8 @@ router.post('/add', addItemValidator, async (req, res) => {
         res.errorEx(ex)
 
         // if error occured then delete this data
-        deleteImg(req.body.eq_image)
+        deleteTempImg(req.body.eq_image)
+        ftpDeleteImg(req.body.eq_image)
     }
 })
 
@@ -119,8 +123,8 @@ router.delete('/:id', async (req, res) => {
             eq_id: item.eq_id
         })
 
-        // delete related files on storage
-        deleteImg(item.eq_image)
+        // deleteImg(item.eq_image) // delete on storage
+        ftpDeleteImg(item.eq_image) // delete on ftp server
 
         // response result
         res.json({
@@ -132,8 +136,8 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
-// #region Image Files Manager
-// convert base64 data to image and save to physical disk
+// #region --- Image Files Manager ---
+// convert base64 data to image file and save to disk
 function convertBase64ToImg(imgB64) {
     // check and create uploaded directory 
     if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir)
@@ -148,8 +152,8 @@ function convertBase64ToImg(imgB64) {
     return null
 }
 
-// delete image
-function deleteImg(img) { // only name + ext
+// delete image on disk
+function deleteTempImg(img) { // only name + ext
     img = path.join(equipDir, img)
     console.log("DeleteImg:", img);
     if (fs.existsSync(img)) fs.unlinkSync(img)
@@ -163,12 +167,9 @@ async function ftpUploadImg(img) {
     // 0. prepare    
     let isUploaded = false
     const imgPath = path.join(equipDir, img)
-    const ftp = require("basic-ftp")
-    const client = new ftp.Client()
-    client.ftp.verbose = false
     try {
         // 1. connect
-        await client.access({
+        await ftpClient.access({
             host: global.myConfig.ftp.host,
             user: global.myConfig.ftp.user,
             password: global.myConfig.ftp.password,
@@ -176,10 +177,10 @@ async function ftpUploadImg(img) {
         })
 
         // 2. check uploading dir and create if not exist
-        await client.ensureDir(ftpUploadDir)
+        await ftpClient.ensureDir(ftpUploadDir)
 
         // 3. try upload file                
-        const temp = await client.uploadFrom(imgPath, `${ftpUploadDir}/${img}`) // passive mode
+        const temp = await ftpClient.uploadFrom(imgPath, `${ftpUploadDir}/${img}`) // passive mode
 
         // 4. success
         console.log('Upload success!', temp)
@@ -188,12 +189,47 @@ async function ftpUploadImg(img) {
     } catch (err) {
         console.log(err)
     }
-    client.close()
+    ftpClient.close()
 
     // delete img (on disk) even upload fail or success
-    deleteImg(img)
+    deleteTempImg(img)
 
     return isUploaded
+}
+
+// delete img on ftp server 
+async function ftpDeleteImg(img) {
+    // ftp delete on server
+    console.log('ftp deleting');
+
+    // 0. prepare    
+    let isDeleted = false
+    const imgPath = path.join(equipDir, img)
+    try {
+        // 1. connect
+        await ftpClient.access({
+            host: global.myConfig.ftp.host,
+            user: global.myConfig.ftp.user,
+            password: global.myConfig.ftp.password,
+            secure: false
+        })
+
+        // 2. check uploading dir and create if not exist
+        await ftpClient.ensureDir(ftpUploadDir)
+
+        // 3. try upload file                
+        const temp = await ftpClient.remove(`${ftpUploadDir}/${img}`) // passive mode
+
+        // 4. success
+        console.log('Delete success!', temp)
+        isDeleted = true
+
+    } catch (err) {
+        console.log(err)
+    }
+    ftpClient.close()
+
+    return isDeleted
 }
 
 // #endregion
