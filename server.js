@@ -30,6 +30,12 @@ app.use(session({
     cookie: {}
 }))
 
+// Contents
+// app.use('/api/uploads', express.static(`${__dirname}/uploads/equipments/`))
+app.get('/api/uploads', (req, res) => {
+    res.end(global.myConfig.content.url + '/uploads/equipments/' + 'equip-1574343515469.jpg')
+})
+
 // 2. middleware
 app.use(require('./middlewares/validator.js'))
 
@@ -40,12 +46,13 @@ app.use('/api', router)
 app.get('/session', (req, res) => {
     res.end('session created:', req.session.item)
 })
-
+/*
 app.get('*', function (req, res) {
-    res.write(`<h1>Session: ${req.session.item} </h1>`)
+    //res.write(`<h1>${req.session.item} </h1>`)
     res.end()
     //res.json({message: 'api test'})
 })
+*/
 
 // (optional) My Tester
 // app.use('/test', require('./test/phutest1.js'))
