@@ -16,3 +16,8 @@ if (process.env.MY_FTP_HOST != null) {
     global.myConfig.ftp.user = process.env.MY_FTP_USER
     global.myConfig.ftp.password = process.env.MY_FTP_PASS
 }
+
+// override Content Path
+if (process.env.MY_FTP_HOST != null) {
+    global.myConfig.content.url = process.env.MY_CONTENT_URL
+}
