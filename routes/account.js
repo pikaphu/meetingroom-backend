@@ -9,6 +9,10 @@ const {
     onLogin
 } = require('../services/account.js')
 
+const {
+    authen
+} = require('../security/password.js')
+
 // route: register
 const registerValidator = [
     check('u_username', "username required!").not().isEmpty(),
@@ -43,23 +47,19 @@ router.post('/login', loginValidator, async (req, res) => {
         console.table(userLoginData)
 
         req.session.userLoginData = userLoginData
-        res.json(userLoginData)
+        return res.json(userLoginData)
     } catch (ex) {
         res.errorEx(ex)
     }
-    res.end()
 })
 
 // route: Get user login session
-router.get('/getuserlogin', (req, res) => {
+router.get('/getuserlogin', authen, (req, res) => {
     try {
         console.log('UserLogin:');
         console.table(req.session.userLoginData);
+        return res.json(req.session.userLoginData); // require authen() first
 
-        if (req.session.userLoginData) {
-            return res.json(req.session.userLoginData)
-        }
-        throw new Error('Unauthorize.');
     } catch (ex) {
         res.errorEx(ex, 401) // unauthorized
     }
