@@ -40,7 +40,7 @@ app.get('/api/uploads', (req, res) => {
 app.use(require('./middlewares/validator.js'))
 
 // 3. Router
-const router = require('./routes/index.js') // main routes
+const router = require('./routes/api.js') // main routes
 app.use('/api', router)
 
 app.get('/session', (req, res) => {
