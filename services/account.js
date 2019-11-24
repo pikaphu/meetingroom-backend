@@ -19,8 +19,11 @@ function onRegister(value) {
 function onLogin(value) {
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM tb_users WHERE u_username=?', [value.u_username], (error, result) => {
+            //  !error query!
             if (error) return reject(error)
+
             if (result.length > 0) {
+                // db found            
                 const userLoginData = result[0]
                 if (password_verify(value.u_password, userLoginData.u_password)) {
                     delete userLoginData.u_password // unused column
@@ -30,9 +33,11 @@ function onLogin(value) {
                 } else {
                     reject(new Error('Login Error!')) // user's password not match DB
                 }
+            } else {
+                // no user found in DB
+                return reject(new Error('Invalid username or password!'))
             }
         })
-        reject(new Error('Invalid username or password!')) // no user found in DB
     })
 }
 

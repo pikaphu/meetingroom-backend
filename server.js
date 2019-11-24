@@ -5,16 +5,33 @@ require('./config/config.js')
 const express = require('express')
 const app = express()
 const PORT = global.myConfig.server_port || 3000
+
+// #region --- CORS ORIGIN ----
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Credentials", true);
+//     res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+
+var cors = require('cors') // cors origin
+//app.use(cors()) // allow pre-flight, options
+var corsConfig = {
+    //origin: 'http://localhost:8080', // only whitelist
+    origin: true, // allow origin
+    credentials: true, // allow to send cookies 
+}
+app.use(cors(corsConfig)) // set config
+app.options('*', cors(corsConfig)) // allow OPTIONS, pre-flight to all origin "*"
+// #endregion
+
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const {
     check,
     validationResult
 } = require('express-validator')
-
-var cors = require('cors') // cors origin
-app.use(cors())
-
 // express http options (request, response)
 app.use(bodyParser.urlencoded({
     extended: false,
@@ -27,7 +44,9 @@ app.use(session({
     secret: process.env.SESSION_SECRET || "secret", // for test only | need more complex security on production deployment.
     resave: false,
     saveUninitialized: false,
-    cookie: {}
+    cookie: {
+        secure: false
+    }
 }))
 
 // Local contents

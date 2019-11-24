@@ -26,8 +26,10 @@ const securityScope = {
                     return next()
                 }
             }
+            // end bypass testing
 
-            // console.log('Check Session:', req.session);
+            console.log('Check Session:');
+            console.table(req.session);
             if (req.session.userLoginData) return next()
             throw new Error("User session not found")
 

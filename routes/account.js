@@ -45,10 +45,11 @@ router.post('/login', loginValidator, async (req, res) => {
     try {
         req.validate();
         const userLoginData = await onLogin(req.body)
+        console.log('Login Success:')
         console.table(userLoginData)
-
         req.session.userLoginData = userLoginData
-        return res.json(userLoginData)
+        res.json(userLoginData)
+
     } catch (ex) {
         res.errorEx(ex)
     }
@@ -59,10 +60,9 @@ router.get('/getuserlogin', authen, (req, res) => {
     try {
         console.log('UserLogin:');
         console.table(req.session.userLoginData);
-        return res.json(req.session.userLoginData); // require authen() first
-
+        res.json(req.session.userLoginData); // require authen() first
     } catch (ex) {
-        res.errorEx(ex, 401) // unauthorized
+        res.errorEx(ex, 402) // unauthorized
     }
 
 })
