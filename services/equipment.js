@@ -4,12 +4,12 @@ const db = require('../databases/mysql.js')
 const tbName = 'tb_equipments'
 
 // get all rows
-function list(value) {
+function list(objval) {
     return new Promise((resolve, reject) => {
-        console.log(value);
+        console.log('List:', objval);
         // pagination var
-        const limitPage = value.limit || 10 // default limit per page
-        const startPage = ((value.page || 1) - 1) * limitPage // paging
+        const limitPage = objval.limit || 10 // default limit per page
+        const startPage = ((objval.page || 1) - 1) * limitPage // paging
         console.log(limitPage);
 
         // sql statements
@@ -19,9 +19,9 @@ function list(value) {
         }
 
         // Search condition
-        if (value.search_key && value.search_text) {
-            const key = value.search_key
-            const txt = value.search_text
+        if (objval.search_key && objval.search_text) {
+            const key = objval.search_key
+            const txt = objval.search_text
             const sqlSearch = ` WHERE ${db.escapeId(key)} LIKE ${db.escape(`%${txt}%`)}`
 
             // append condition to each statements

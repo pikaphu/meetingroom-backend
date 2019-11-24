@@ -30,11 +30,8 @@ app.use(session({
     cookie: {}
 }))
 
-// Contents
-// app.use('/api/uploads', express.static(`${__dirname}/uploads/equipments/`))
-app.get('/api/uploads', (req, res) => {
-    res.end(global.myConfig.content.url + '/uploads/equipments/' + 'equip-1574343515469.jpg')
-})
+// Local contents
+// app.use('/api/uploads', express.static(`${__dirname}/uploads/equipments`));
 
 // 2. middleware
 app.use(require('./middlewares/validator.js'))
