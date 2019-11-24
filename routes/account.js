@@ -40,6 +40,7 @@ const loginValidator = [
     check('u_password', "password required!").not().isEmpty()
 ]
 router.post('/login', loginValidator, async (req, res) => {
+    console.log('Login:');
     console.table(req.body);
     try {
         req.validate();

@@ -23,15 +23,16 @@ function onLogin(value) {
             if (result.length > 0) {
                 const userLoginData = result[0]
                 if (password_verify(value.u_password, userLoginData.u_password)) {
-                    delete userLoginData.u_password
-                    delete userLoginData.u_created
-                    delete userLoginData.u_updated
-                    resolve(userLoginData)
+                    delete userLoginData.u_password // unused column
+                    delete userLoginData.u_created // unused column
+                    delete userLoginData.u_updated // unused column
+                    resolve(userLoginData) // return login data
                 } else {
-                    reject(new Error('Invalid username or password'))
+                    reject(new Error('Login Error!')) // user's password not match DB
                 }
             }
         })
+        reject(new Error('Invalid username or password!')) // no user found in DB
     })
 }
 
