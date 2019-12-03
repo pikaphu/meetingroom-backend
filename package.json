@@ -20,7 +20,9 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "prod": "NODE_ENV=production nodemon",
+    "local": "NODE_ENV=localtest nodemon"
   },
   "author": "",
   "license": "ISC"
