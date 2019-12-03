@@ -38,6 +38,28 @@ router.get('/', homeValidator, async (req, res) => {
     }
 })
 
+router.get('/:id', async (req, res) => {
+    try {
+        const data = await service.findOne({
+            eq_id: req.params.id
+        })
+        if (!data) throw new Error('Not found item.');
+
+        //convert img file to base64 data
+        const imgPath = global.myConfig.content.url + path.join(ftpUploadDir, data.eq_image)
+        //data.eq_image = base64Img.base64Sync(imgPath)); // physical path        
+        // base64Img.requestBase64(imgPath, (errB64, resB64, bodyB64) => { // url path
+        //     data.eq_image = bodyB64
+        //     res.json(data)
+        // })
+        data.eq_image = imgPath
+        res.json(data)
+
+    } catch (ex) {
+        res.errorEx(ex)
+    }
+})
+
 // route: ADD
 // Create equipment item
 const addItemValidator = [
@@ -50,15 +72,8 @@ router.post('/add', addItemValidator, async (req, res) => {
     try {
         req.validate()
 
-        // convert base64 data to img file and get its name        
-        const img = convertBase64ToImg(req.body.eq_image)
-        req.body.eq_image = img
-
-        // upload file
-        const uploadStatus = await ftpUploadImg(img)
-        if (!uploadStatus) {
-            throw new Error('Cannot upload Image')
-        }
+        // convert base64 data to img file and upload
+        req.body.eq_image = await convertB64AndUploadImg(req.body.eq_image)
 
         // Add item data
         const result = await service.onCreate(req.body)
@@ -88,6 +103,9 @@ router.put('/:id', async (req, res) => {
             eq_id: req.params.id
         })
         if (!item || item.length < 1) throw new Error('Not found item')
+
+        // convert to img and upload
+        req.body.eq_image = await convertB64AndUploadImg(req.body.eq_image)
 
         // update from db
         const result = await service.onUpdate(item.eq_id, req.body)
@@ -137,6 +155,20 @@ router.delete('/:id', async (req, res) => {
 })
 
 // #region --- Image Files Manager ---
+
+async function convertB64AndUploadImg(imgB64) {
+    // convert base64 data to img file and get its name        
+    const img = convertBase64ToImg(imgB64)
+
+    // upload file
+    const uploadStatus = await ftpUploadImg(img)
+    if (!uploadStatus) {
+        throw new Error('Cannot upload Image')
+    }
+
+    return img
+}
+
 // convert base64 data to image file and save to disk
 function convertBase64ToImg(imgB64) {
     // check and create uploaded directory 

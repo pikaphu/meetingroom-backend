@@ -10,7 +10,7 @@ function list(objval) {
         // pagination var
         const limitPage = objval.limit || 10 // default limit per page
         const startPage = ((objval.page || 1) - 1) * limitPage // paging
-        console.log(limitPage);
+        //console.log(limitPage);
 
         // sql statements
         const sqlCmds = {
@@ -91,7 +91,8 @@ function onUpdate(id, value) {
         db.query(`UPDATE ?? 
                 SET eq_name = ?,
                 eq_detail = ?,
-                eq_image = ?
+                eq_image = ?,
+                eq_updated = NOW()
                 WHERE eq_id = ?`,
             [tbName,
                 value.eq_name,
