@@ -26,20 +26,25 @@ app.use(cors(corsConfig)) // set config
 app.options('*', cors(corsConfig)) // allow OPTIONS, pre-flight to all origin "*"
 // #endregion
 
+// express http options (request, response)
 const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({
+    extended: true,
+    limit: '10mb' // limit upload size
+}))
+app.use(bodyParser.json({
+    extended: true,
+    limit: '10mb' // limit data size
+}))
+
+
+// session 
 const session = require('express-session')
 const {
     check,
     validationResult
 } = require('express-validator')
-// express http options (request, response)
-app.use(bodyParser.urlencoded({
-    extended: false,
-    limit: '10MB' // limit upload size
-}))
-app.use(bodyParser.json())
 
-// session 
 app.use(session({
     secret: process.env.SESSION_SECRET || "secret", // for test only | need more complex security on production deployment.
     resave: false,
