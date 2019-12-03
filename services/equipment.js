@@ -7,7 +7,7 @@ const tbName = 'tb_equipments'
 function list(objval) {
     return new Promise((resolve, reject) => {
         console.log('List:', objval);
-        // pagination var
+        // Pagination var
         const limitPage = objval.limit || 10 // default limit per page
         const startPage = ((objval.page || 1) - 1) * limitPage // paging
         //console.log(limitPage);
@@ -36,11 +36,12 @@ function list(objval) {
 
             // prepare data
             const items = {
+                limit: limitPage,
                 rows: result[0].rows,
                 result: []
             }
 
-            // pagination to query
+            // Pagination to query
             sqlCmds.select += ` LIMIT ${db.escape(startPage)}, ${limitPage}` // LIMIT value, offset
 
             // execute query to get result
