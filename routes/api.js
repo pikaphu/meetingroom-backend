@@ -17,5 +17,7 @@ router.use('/account', require('./account.js'))
 // route: equipment
 router.use('/equipment', authen, require('./equipment.js'))
 
+// route: rooms
+router.use('/room', require('./room.js'))
 
 module.exports = router
