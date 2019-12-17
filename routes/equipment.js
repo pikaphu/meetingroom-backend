@@ -1,4 +1,4 @@
-// #region Import + setup
+// #region Setup Dependencies
 const router = require('express').Router()
 const {
     check,
