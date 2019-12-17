@@ -113,17 +113,17 @@ router.delete('/:id', async (req, res) => {
         console.log('+Room->Delete');
 
         const item = await service.findOne({
-            eq_id: req.params.id
+            r_id: req.params.id
         })
         if (!item || item.length < 1) throw new Error('Not found item')
 
         // delete from db 
         const result = await service.onDelete({
-            eq_id: item.eq_id
+            r_id: item.r_id
         })
 
         // deleteImg(item.eq_image) // delete on storage
-        ftpDeleteImg(item.eq_image) // delete on ftp server
+        imgMng.ftpDeleteImg(item.r_image, imgFTPDir) // delete on ftp server
 
         // response result
         res.json({

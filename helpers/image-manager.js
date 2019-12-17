@@ -98,11 +98,11 @@ const imageManager = {
     // delete img on ftp server 
     async ftpDeleteImg(img, targetDir) {
         // ftp delete on server
-        console.log('ftp deleting');
+        console.log('ftp deleting...');
 
         // 0. prepare    
         let isDeleted = false
-        const imgPath = path.join(targetDir, img)
+        const imgPath = targetDir + '/' + img //path.join(targetDir, img)
         try {
             // 1. connect
             await ftpClient.access({
@@ -116,14 +116,14 @@ const imageManager = {
             await ftpClient.ensureDir(ftpUploadDir)
 
             // 3. try upload file                
-            const temp = await ftpClient.remove(`${ftpUploadDir}/${img}`) // passive mode
+            const temp = await ftpClient.remove(`${ftpUploadDir}${imgPath}`) // passive mode
 
             // 4. success
-            console.log('Delete success!', temp)
+            console.log('ftp delete success!', temp)
             isDeleted = true
 
         } catch (err) {
-            console.log(err)
+            console.log('ftp delete failed!', err)
         }
         ftpClient.close()
 
